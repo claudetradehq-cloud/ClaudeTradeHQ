@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Github } from "lucide-react";
+import { XIcon } from "@/components/icons/x-icon";
 
 export function Footer() {
   return (
@@ -24,6 +26,17 @@ export function Footer() {
             Systematic trading research & education. Audited backtests, live
             performance, and zero hype.
           </p>
+          <div className="flex items-center gap-2 pt-1">
+            <SocialLink
+              href="https://x.com/ClaudeTradeHQ"
+              label="Follow @ClaudeTradeHQ on X"
+            >
+              <XIcon className="h-4 w-4" />
+            </SocialLink>
+            <SocialLink href="https://github.com" label="GitHub">
+              <Github className="h-4 w-4" />
+            </SocialLink>
+          </div>
         </div>
 
         <FooterColumn
@@ -63,6 +76,28 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function SocialLink({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border/70 bg-card/40 text-muted-foreground transition-colors hover:border-neon-orange/50 hover:bg-card/80 hover:text-neon-orange"
+    >
+      {children}
+    </a>
   );
 }
 

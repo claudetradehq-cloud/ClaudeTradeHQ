@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { XIcon } from "@/components/icons/x-icon";
 
 const heroStats = [
   { label: "Strategies tracked", value: "27" },
@@ -74,6 +75,21 @@ export function Hero() {
                   </a>
                 </Button>
               </div>
+
+              <a
+                href="https://x.com/ClaudeTradeHQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-neon-orange"
+              >
+                <XIcon className="h-3.5 w-3.5" />
+                Follow{" "}
+                <span className="font-medium text-foreground">
+                  @ClaudeTradeHQ
+                </span>{" "}
+                on X
+                <ArrowRight className="h-3 w-3 opacity-60" />
+              </a>
             </div>
           </div>
         </div>

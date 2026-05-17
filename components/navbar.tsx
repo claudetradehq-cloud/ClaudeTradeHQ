@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { XIcon } from "@/components/icons/x-icon";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -62,12 +63,32 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="icon" className="hidden sm:flex">
+        <div className="flex items-center gap-1.5">
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-neon-orange"
+          >
+            <a
+              href="https://x.com/ClaudeTradeHQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow @ClaudeTradeHQ on X"
+            >
+              <XIcon className="h-4 w-4" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="hidden text-muted-foreground hover:text-foreground sm:flex"
+          >
             <a
               href="https://github.com"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               aria-label="GitHub"
             >
               <Github className="h-4 w-4" />
