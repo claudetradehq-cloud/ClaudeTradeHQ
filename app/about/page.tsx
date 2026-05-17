@@ -127,8 +127,8 @@ export default function AboutPage() {
             <ShieldCheck className="h-5 w-5 text-neon-blue" />
             <h3 className="mt-3 text-sm font-semibold">Independent verification</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Live broker statements available on request. We're happy to be
-              audited by a third-party that doesn't sell signals or courses.
+              Live broker statements available on request. We&apos;re happy to be
+              audited by a third-party that doesn&apos;t sell signals or courses.
             </p>
           </div>
 
