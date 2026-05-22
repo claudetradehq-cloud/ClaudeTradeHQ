@@ -30,13 +30,13 @@ export default function CthqBacktestPage() {
         </h1>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <Badge variant="success">v0.01 · live</Badge>
-          <Badge variant="muted">MT5 · M30</Badge>
+          <Badge variant="muted">MT5 · GBPUSD · M30</Badge>
           <Badge variant="muted">Elite ClaudeTrade Bias</Badge>
         </div>
         <p className="mt-5 text-muted-foreground">
-          MetaTrader 5 Strategy Tester results for ClaudeTradeHQ-0.01, run on
-          $1,000 starting capital with 0.01 fixed position size and 100% history
-          quality. Every trade is logged below.
+          MetaTrader 5 Strategy Tester results for ClaudeTradeHQ-0.01 on
+          GBPUSD, M30, run with $1,000 starting capital, 0.01 fixed position
+          size, and 100% history quality. Every trade is logged below.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild size="sm">
