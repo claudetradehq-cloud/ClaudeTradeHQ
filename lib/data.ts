@@ -439,6 +439,9 @@ export interface ExpertAdvisor {
   name: string;
   tagline: string;
   description: string;
+  usageNotes?: string;
+  contactCTA?: { label: string; url: string };
+  backtestSlug?: string;
   strategy: string;
   asset: string;
   timeframe: string;
@@ -452,12 +455,19 @@ export const expertAdvisors: ExpertAdvisor[] = [
   {
     id: "ea-cthq-0.01",
     name: "ClaudeTradeHQ-0.01",
-    tagline: "4-stochastic bias EA with locked institutional defaults.",
+    tagline: "Elite ClaudeTrade bias EA with locked institutional defaults.",
     description:
-      "MT5 Expert Advisor built on a 4-stochastic bias model. Ships with locked defaults — no user-editable inputs — so every account runs identical risk, timing, and exit logic. Includes session filter, daily-range gate, smart-trail equity exits, and directional drawdown protection.",
+      "MT5 Expert Advisor built on an Elite ClaudeTrade bias model. Ships with locked defaults — no user-editable inputs — so every account runs identical risk, timing, and exit logic. Includes session filter, daily-range gate, smart-trail equity exits, and directional drawdown protection.",
+    usageNotes:
+      "$1,000 starting balance advisable. Position size is hard-coded to 0.01. Let the bot do its job — do not interfere with open positions. IMPORTANT: this EA must be loaded onto an M30 chart, and it's strongly recommended to run MT5 24/7 on a VPS.",
+    contactCTA: {
+      label: "For adjustable position sizing, contact Dan on X — @ClaudeTradeHQ",
+      url: "https://x.com/ClaudeTradeHQ",
+    },
+    backtestSlug: "claudetradehq-0-01",
     strategy: "Bias",
     asset: "FX",
-    timeframe: "Chart TF",
+    timeframe: "M30",
     version: "0.01",
     mt4File: null,
     mt5File: "ClaudeTradeHQ-0.01.ex5",

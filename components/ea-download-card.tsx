@@ -1,4 +1,5 @@
-import { Download, Lock } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Download, LineChart, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { type ExpertAdvisor } from "@/lib/data";
@@ -22,6 +23,35 @@ export function EADownloadCard({ ea }: { ea: ExpertAdvisor }) {
       </div>
 
       <p className="mt-4 text-sm text-muted-foreground">{ea.description}</p>
+
+      {ea.usageNotes && (
+        <div className="mt-4 rounded-md border border-neon-orange/30 bg-neon-orange/5 p-3 text-xs text-foreground/90">
+          {ea.usageNotes}
+        </div>
+      )}
+
+      {ea.contactCTA && (
+        <a
+          href={ea.contactCTA.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-neon-blue hover:underline"
+        >
+          {ea.contactCTA.label}
+          <ArrowUpRight className="h-3 w-3" />
+        </a>
+      )}
+
+      {ea.backtestSlug && (
+        <Link
+          href={`/backtests/${ea.backtestSlug}`}
+          className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-neon-orange hover:underline"
+        >
+          <LineChart className="h-3.5 w-3.5" />
+          View backtest report
+          <ArrowUpRight className="h-3 w-3" />
+        </Link>
+      )}
 
       <div
         className={`mt-6 grid gap-2 border-t border-border/60 pt-5 ${
