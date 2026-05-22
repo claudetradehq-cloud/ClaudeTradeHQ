@@ -433,3 +433,62 @@ export const assets = [
 export const timeframes = ["M5", "M15", "H1", "H4", "D1"] as const;
 
 export const statuses: BacktestStatus[] = ["live", "archived", "experimental"];
+
+export interface ExpertAdvisor {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  strategy: string;
+  asset: string;
+  timeframe: string;
+  version: string;
+  mt4File: string | null;
+  mt5File: string | null;
+  available: boolean;
+}
+
+export const expertAdvisors: ExpertAdvisor[] = [
+  {
+    id: "ea-001",
+    name: "Aurora Trend EA",
+    tagline: "Adaptive Donchian breakout with volatility-scaled sizing.",
+    description:
+      "Session-filtered trend follower built from the Aurora research line. Risk per trade is sized from ATR, and the EA respects broker stop / freeze levels automatically.",
+    strategy: "Trend",
+    asset: "FX",
+    timeframe: "H1",
+    version: "1.0.0",
+    mt4File: "aurora-trend-v1.0.0.ex4",
+    mt5File: "aurora-trend-v1.0.0.ex5",
+    available: false,
+  },
+  {
+    id: "ea-002",
+    name: "Lumen Mean-Revert EA",
+    tagline: "RSI-2 style fade with volatility regime gating.",
+    description:
+      "Daily-bar mean reversion across index CFDs. Includes a regime filter that disables entries during sustained high-volatility periods to avoid getting stomped during crash regimes.",
+    strategy: "Mean Reversion",
+    asset: "Indices",
+    timeframe: "D1",
+    version: "1.0.0",
+    mt4File: "lumen-meanrevert-v1.0.0.ex4",
+    mt5File: "lumen-meanrevert-v1.0.0.ex5",
+    available: false,
+  },
+  {
+    id: "ea-003",
+    name: "Helix Scalper EA",
+    tagline: "London open momentum scalper with hard daily loss limit.",
+    description:
+      "Short-horizon momentum entries around the London open. Strict daily-loss kill switch, magic-number isolated so it co-exists with other EAs on the same account.",
+    strategy: "Breakout",
+    asset: "FX",
+    timeframe: "M15",
+    version: "0.9.0",
+    mt4File: "helix-scalper-v0.9.0.ex4",
+    mt5File: "helix-scalper-v0.9.0.ex5",
+    available: false,
+  },
+];
