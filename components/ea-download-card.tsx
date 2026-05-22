@@ -23,17 +23,25 @@ export function EADownloadCard({ ea }: { ea: ExpertAdvisor }) {
 
       <p className="mt-4 text-sm text-muted-foreground">{ea.description}</p>
 
-      <div className="mt-6 grid gap-2 border-t border-border/60 pt-5 sm:grid-cols-2">
-        <DownloadButton
-          label="MT4 (.ex4)"
-          file={ea.mt4File}
-          available={ea.available}
-        />
-        <DownloadButton
-          label="MT5 (.ex5)"
-          file={ea.mt5File}
-          available={ea.available}
-        />
+      <div
+        className={`mt-6 grid gap-2 border-t border-border/60 pt-5 ${
+          ea.mt4File && ea.mt5File ? "sm:grid-cols-2" : ""
+        }`}
+      >
+        {ea.mt4File && (
+          <DownloadButton
+            label="MT4 (.ex4)"
+            file={ea.mt4File}
+            available={ea.available}
+          />
+        )}
+        {ea.mt5File && (
+          <DownloadButton
+            label="MT5 (.ex5)"
+            file={ea.mt5File}
+            available={ea.available}
+          />
+        )}
       </div>
     </article>
   );

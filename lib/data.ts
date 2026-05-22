@@ -450,6 +450,20 @@ export interface ExpertAdvisor {
 
 export const expertAdvisors: ExpertAdvisor[] = [
   {
+    id: "ea-cthq-0.01",
+    name: "ClaudeTradeHQ-0.01",
+    tagline: "4-stochastic bias EA with locked institutional defaults.",
+    description:
+      "MT5 Expert Advisor built on a 4-stochastic bias model. Ships with locked defaults — no user-editable inputs — so every account runs identical risk, timing, and exit logic. Includes session filter, daily-range gate, smart-trail equity exits, and directional drawdown protection.",
+    strategy: "Bias",
+    asset: "FX",
+    timeframe: "Chart TF",
+    version: "0.01",
+    mt4File: null,
+    mt5File: "ClaudeTradeHQ-0.01.ex5",
+    available: true,
+  },
+  {
     id: "ea-001",
     name: "Aurora Trend EA",
     tagline: "Adaptive Donchian breakout with volatility-scaled sizing.",
