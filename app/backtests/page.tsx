@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BacktestGrid } from "@/components/backtest-grid";
+import { WhitelistedBuildPanel } from "@/components/whitelisted-build-panel";
 
 export const metadata: Metadata = {
   title: "Backtests",
@@ -25,6 +26,10 @@ export default function BacktestsPage() {
       </header>
 
       <BacktestGrid />
+
+      <div className="mt-12">
+        <WhitelistedBuildPanel />
+      </div>
     </section>
   );
 }
