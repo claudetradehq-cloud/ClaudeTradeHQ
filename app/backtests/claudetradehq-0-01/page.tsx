@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { WhitelistedBuildPanel } from "@/components/whitelisted-build-panel";
 
 export const metadata: Metadata = {
   title: "ClaudeTradeHQ-0.01 — Backtest Report",
@@ -162,7 +163,11 @@ export default function CthqBacktestPage() {
         </ReportCard>
       </div>
 
-      <div className="surface mt-12 p-6 text-sm text-muted-foreground">
+      <div className="mt-12">
+        <WhitelistedBuildPanel />
+      </div>
+
+      <div className="surface mt-8 p-6 text-sm text-muted-foreground">
         <div className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-neon-orange">
           Disclaimer
         </div>
