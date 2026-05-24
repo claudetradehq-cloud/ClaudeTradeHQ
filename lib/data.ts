@@ -4,192 +4,37 @@ export interface Backtest {
   id: string;
   name: string;
   slug: string;
-  strategy: "Trend" | "Mean Reversion" | "Breakout" | "Carry" | "ML / RL";
+  strategy: "Trend" | "Mean Reversion" | "Breakout" | "Carry" | "ML / RL" | "Bias";
   asset: "FX" | "Crypto" | "Equities" | "Indices" | "Metals";
-  timeframe: "M5" | "M15" | "H1" | "H4" | "D1";
+  timeframe: "M5" | "M15" | "M30" | "H1" | "H4" | "D1";
   returnPct: number;
   sharpe: number;
-  sortino: number;
+  sortino?: number;
   maxDrawdownPct: number;
   winRatePct: number;
   trades: number;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   status: BacktestStatus;
   description: string;
 }
 
 export const backtests: Backtest[] = [
   {
-    id: "bt-001",
-    name: "Aurora Trend / EURUSD H1",
-    slug: "aurora-trend-eurusd-h1",
-    strategy: "Trend",
+    id: "bt-cthq-0.01",
+    name: "ClaudeTradeHQ-0.01 / GBPUSD M30",
+    slug: "claudetradehq-0-01",
+    strategy: "Bias",
     asset: "FX",
-    timeframe: "H1",
-    returnPct: 42.6,
-    sharpe: 1.82,
-    sortino: 2.41,
-    maxDrawdownPct: 8.4,
-    winRatePct: 58.1,
-    trades: 412,
-    startDate: "2022-01-03",
-    endDate: "2025-12-30",
+    timeframe: "M30",
+    returnPct: 60.85,
+    sharpe: 1.56,
+    maxDrawdownPct: 5.79,
+    winRatePct: 63.4,
+    trades: 846,
     status: "live",
     description:
-      "Adaptive Donchian breakout with volatility-scaled position sizing and session filters.",
-  },
-  {
-    id: "bt-002",
-    name: "Lumen Mean-Revert / SPX D1",
-    slug: "lumen-mean-revert-spx-d1",
-    strategy: "Mean Reversion",
-    asset: "Indices",
-    timeframe: "D1",
-    returnPct: 28.3,
-    sharpe: 1.47,
-    sortino: 1.92,
-    maxDrawdownPct: 6.1,
-    winRatePct: 64.8,
-    trades: 184,
-    startDate: "2021-06-15",
-    endDate: "2025-12-30",
-    status: "live",
-    description:
-      "Z-score reversion on SPX with regime gating using realised vol and VIX term structure.",
-  },
-  {
-    id: "bt-003",
-    name: "Vector Breakout / BTCUSD H4",
-    slug: "vector-breakout-btcusd-h4",
-    strategy: "Breakout",
-    asset: "Crypto",
-    timeframe: "H4",
-    returnPct: 96.4,
-    sharpe: 1.69,
-    sortino: 2.18,
-    maxDrawdownPct: 22.7,
-    winRatePct: 47.5,
-    trades: 268,
-    startDate: "2020-01-01",
-    endDate: "2025-12-30",
-    status: "live",
-    description:
-      "Range-expansion breakout with trailing ATR stops; long-only crypto exposure with risk caps.",
-  },
-  {
-    id: "bt-004",
-    name: "Helios Carry / G10 FX D1",
-    slug: "helios-carry-g10-fx-d1",
-    strategy: "Carry",
-    asset: "FX",
-    timeframe: "D1",
-    returnPct: 19.8,
-    sharpe: 1.21,
-    sortino: 1.55,
-    maxDrawdownPct: 9.6,
-    winRatePct: 56.2,
-    trades: 96,
-    startDate: "2019-01-02",
-    endDate: "2025-12-30",
-    status: "archived",
-    description:
-      "Cross-sectional G10 FX carry with risk-off de-grossing using credit spreads.",
-  },
-  {
-    id: "bt-005",
-    name: "Nyx RL Scalper / ETHUSD M15",
-    slug: "nyx-rl-scalper-ethusd-m15",
-    strategy: "ML / RL",
-    asset: "Crypto",
-    timeframe: "M15",
-    returnPct: 54.1,
-    sharpe: 1.94,
-    sortino: 2.63,
-    maxDrawdownPct: 11.3,
-    winRatePct: 53.4,
-    trades: 1843,
-    startDate: "2023-01-01",
-    endDate: "2025-12-30",
-    status: "experimental",
-    description:
-      "PPO-based RL agent trained on micro-structure features; live shadow mode only.",
-  },
-  {
-    id: "bt-006",
-    name: "Orion Trend / Gold H4",
-    slug: "orion-trend-gold-h4",
-    strategy: "Trend",
-    asset: "Metals",
-    timeframe: "H4",
-    returnPct: 36.2,
-    sharpe: 1.55,
-    sortino: 2.04,
-    maxDrawdownPct: 10.2,
-    winRatePct: 52.7,
-    trades: 224,
-    startDate: "2020-06-01",
-    endDate: "2025-12-30",
-    status: "live",
-    description:
-      "Dual-MA trend with macro filter on real yields; gold-only with USD hedge overlay.",
-  },
-  {
-    id: "bt-007",
-    name: "Pulse Breakout / NQ M15",
-    slug: "pulse-breakout-nq-m15",
-    strategy: "Breakout",
-    asset: "Indices",
-    timeframe: "M15",
-    returnPct: 31.7,
-    sharpe: 1.36,
-    sortino: 1.78,
-    maxDrawdownPct: 7.8,
-    winRatePct: 49.3,
-    trades: 612,
-    startDate: "2022-03-01",
-    endDate: "2025-12-30",
-    status: "live",
-    description:
-      "Opening-range breakout on Nasdaq futures with news-window blackouts.",
-  },
-  {
-    id: "bt-008",
-    name: "Sable Carry / EM FX D1",
-    slug: "sable-carry-em-fx-d1",
-    strategy: "Carry",
-    asset: "FX",
-    timeframe: "D1",
-    returnPct: 14.4,
-    sharpe: 0.92,
-    sortino: 1.18,
-    maxDrawdownPct: 14.8,
-    winRatePct: 54.0,
-    trades: 78,
-    startDate: "2018-01-02",
-    endDate: "2025-12-30",
-    status: "archived",
-    description:
-      "EM carry basket with crash-risk overlay; retired after 2024 regime change.",
-  },
-  {
-    id: "bt-009",
-    name: "Echo Mean-Revert / DAX H1",
-    slug: "echo-mean-revert-dax-h1",
-    strategy: "Mean Reversion",
-    asset: "Indices",
-    timeframe: "H1",
-    returnPct: 22.9,
-    sharpe: 1.28,
-    sortino: 1.61,
-    maxDrawdownPct: 5.7,
-    winRatePct: 61.4,
-    trades: 304,
-    startDate: "2022-01-03",
-    endDate: "2025-12-30",
-    status: "experimental",
-    description:
-      "Intraday mean reversion on DAX with VWAP anchor and volatility-bucket sizing.",
+      "Elite ClaudeTrade bias model with locked defaults. MT5 Strategy Tester run on GBPUSD M30, $1,000 starting capital, 0.01 fixed lot, 100% history quality.",
   },
 ];
 
@@ -415,6 +260,7 @@ export const tickerItems = [
 ];
 
 export const strategies = [
+  "Bias",
   "Trend",
   "Mean Reversion",
   "Breakout",
@@ -430,7 +276,7 @@ export const assets = [
   "Metals",
 ] as const;
 
-export const timeframes = ["M5", "M15", "H1", "H4", "D1"] as const;
+export const timeframes = ["M5", "M15", "M30", "H1", "H4", "D1"] as const;
 
 export const statuses: BacktestStatus[] = ["live", "archived", "experimental"];
 

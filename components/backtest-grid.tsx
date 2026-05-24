@@ -55,7 +55,7 @@ export function BacktestGrid() {
           case "drawdown":
             return a.maxDrawdownPct - b.maxDrawdownPct;
           case "recent":
-            return b.endDate.localeCompare(a.endDate);
+            return (b.endDate ?? "").localeCompare(a.endDate ?? "");
           case "sharpe":
           default:
             return b.sharpe - a.sharpe;
