@@ -306,10 +306,6 @@ export const expertAdvisors: ExpertAdvisor[] = [
       "MT5 Expert Advisor built on an Elite ClaudeTrade bias model. Ships with locked defaults — no user-editable inputs — so every account runs identical risk, timing, and exit logic. Includes session filter, daily-range gate, smart-trail equity exits, and directional drawdown protection.",
     usageNotes:
       "$1,000 starting balance advisable. Position size is hard-coded to 0.01. Let the bot do its job — do not interfere with open positions. IMPORTANT: this EA must be loaded onto a GBPUSD M30 chart, and it's strongly recommended to run MT5 24/7 on a VPS.",
-    contactCTA: {
-      label: "For adjustable position sizing, contact Dan on X — @ClaudeTradeHQ",
-      url: "https://x.com/ClaudeTradeHQ",
-    },
     backtestSlug: "claudetradehq-0-01",
     strategy: "Bias",
     asset: "GBPUSD",
