@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Lock, Mail, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Lock, ShieldCheck } from "lucide-react";
 import { EADownloadCard } from "@/components/ea-download-card";
 import { expertAdvisors } from "@/lib/data";
 
@@ -70,19 +69,13 @@ export default function DownloadsPage() {
               can be included in the whitelisted build on request.
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg">
-                <a href={`mailto:${CONTACT_EMAIL}?subject=Whitelisted%20EA%20request`}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  Apply via email
-                </a>
-              </Button>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="mono text-sm text-neon-blue hover:underline"
-              >
+            <div className="mt-6">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Apply by email
+              </div>
+              <div className="mono mt-2 text-2xl font-semibold tracking-tight text-neon-orange md:text-3xl">
                 {CONTACT_EMAIL}
-              </a>
+              </div>
             </div>
           </div>
 
