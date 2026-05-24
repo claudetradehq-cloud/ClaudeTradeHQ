@@ -177,7 +177,7 @@ export default function AboutPage() {
             <Link href="/backtests">Browse backtests</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link href="/performance">View live performance</Link>
+            <Link href="/downloads">Download the EA</Link>
           </Button>
         </div>
       </div>
