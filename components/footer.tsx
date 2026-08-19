@@ -44,7 +44,7 @@ export function Footer() {
           links={[
             { href: "/backtests", label: "Backtests" },
             { href: "/downloads", label: "Downloads" },
-            { href: "/funded-accounts", label: "Funded Accounts" },
+            { href: "/fx-blue-links", label: "FX Blue Links" },
             { href: "/about", label: "About" },
           ]}
         />
