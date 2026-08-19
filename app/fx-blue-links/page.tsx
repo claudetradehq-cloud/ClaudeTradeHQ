@@ -6,6 +6,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   ExternalLink,
+  RefreshCw,
   Server,
   ShieldCheck,
   Signal,
@@ -15,9 +16,10 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import {
-  demoAccounts,
-  liveAccounts,
+  REVALIDATE_SECONDS,
+  getFxBlueAccounts,
   signOf,
+  splitAccounts,
   type FxBlueAccount,
 } from "@/lib/fxblue";
 
@@ -27,7 +29,14 @@ export const metadata: Metadata = {
     "Live FX Blue statistics for the ClaudeTradeHQ MT5 demo and live accounts — running 24/7 on a dedicated VPS.",
 };
 
-export default function FxBlueLinksPage() {
+/** Re-fetch the statements from FX Blue at most twice an hour. */
+export const revalidate = 1800;
+
+export default async function FxBlueLinksPage() {
+  const { accounts, staleIds } = await getFxBlueAccounts();
+  const { demo: demoAccounts, live: liveAccounts } = splitAccounts(accounts);
+  const refreshMinutes = Math.round(REVALIDATE_SECONDS / 60);
+
   return (
     <section className="container-wide py-14 md:py-20">
       <header className="mb-12 max-w-3xl">
@@ -50,8 +59,11 @@ export default function FxBlueLinksPage() {
             VPS · 24/7
           </span>
           <span className="mono text-muted-foreground">
-            {demoAccounts.length + liveAccounts.length} account
-            {demoAccounts.length + liveAccounts.length === 1 ? "" : "s"} tracked
+            {accounts.length} account{accounts.length === 1 ? "" : "s"} tracked
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+            <RefreshCw className="h-3 w-3" />
+            Pulled from FX Blue every {refreshMinutes} min
           </span>
         </div>
       </header>
@@ -66,7 +78,11 @@ export default function FxBlueLinksPage() {
         {demoAccounts.length > 0 ? (
           <div className="mt-6 space-y-5">
             {demoAccounts.map((a) => (
-              <AccountCard key={a.id} account={a} />
+              <AccountCard
+                key={a.id}
+                account={a}
+                stale={staleIds.includes(a.id)}
+              />
             ))}
           </div>
         ) : (
@@ -86,7 +102,11 @@ export default function FxBlueLinksPage() {
         {liveAccounts.length > 0 ? (
           <div className="mt-6 space-y-5">
             {liveAccounts.map((a) => (
-              <AccountCard key={a.id} account={a} />
+              <AccountCard
+                key={a.id}
+                account={a}
+                stale={staleIds.includes(a.id)}
+              />
             ))}
           </div>
         ) : (
@@ -191,7 +211,13 @@ function SectionHeading({
   );
 }
 
-function AccountCard({ account: a }: { account: FxBlueAccount }) {
+function AccountCard({
+  account: a,
+  stale = false,
+}: {
+  account: FxBlueAccount;
+  stale?: boolean;
+}) {
   const live = a.accountType?.toLowerCase() === "real";
 
   return (
@@ -222,6 +248,14 @@ function AccountCard({ account: a }: { account: FxBlueAccount }) {
               <>
                 {" · "}
                 <span className="mono">last update {a.lastUpdate} GMT</span>
+              </>
+            )}
+            {stale && (
+              <>
+                {" · "}
+                <span className="text-neon-orange">
+                  cached &mdash; FX Blue unreachable
+                </span>
               </>
             )}
           </p>
