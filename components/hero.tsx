@@ -1,11 +1,5 @@
 import Image from "next/image";
-
-const heroStats = [
-  { label: "Strategies tracked", value: "27" },
-  { label: "Backtests published", value: "142" },
-  { label: "Live Sharpe (TTM)", value: "1.74" },
-  { label: "Max DD (TTM)", value: "-9.8%" },
-];
+import { AccountSnapshot } from "@/components/account-snapshot";
 
 export function Hero() {
   return (
@@ -36,19 +30,9 @@ export function Hero() {
         </h1>
       </div>
 
+      {/* Live MT5 account profits, shared with /fx-blue-links */}
       <div className="container-wide mt-10">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {heroStats.map((s) => (
-            <div key={s.label} className="surface surface-hover p-5">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                {s.label}
-              </div>
-              <div className="mono mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-                {s.value}
-              </div>
-            </div>
-          ))}
-        </div>
+        <AccountSnapshot />
       </div>
 
       <div className="mt-16 glow-divider" />
