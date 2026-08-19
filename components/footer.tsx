@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Github } from "lucide-react";
+import { Github, Youtube } from "lucide-react";
 import { XIcon } from "@/components/icons/x-icon";
 
 export function Footer() {
@@ -27,6 +27,12 @@ export function Footer() {
             performance, and zero hype.
           </p>
           <div className="flex items-center gap-2 pt-1">
+            <SocialLink
+              href="https://youtube.com/@claudetradehq"
+              label="Watch ClaudeTradeHQ tutorials on YouTube"
+            >
+              <Youtube className="h-4 w-4" />
+            </SocialLink>
             <SocialLink
               href="https://x.com/ClaudeTradeHQ"
               label="Follow @ClaudeTradeHQ on X"

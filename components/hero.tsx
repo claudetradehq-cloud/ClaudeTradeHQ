@@ -1,9 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Sparkles, Youtube } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { XIcon } from "@/components/icons/x-icon";
 
 const heroStats = [
   { label: "Strategies tracked", value: "27" },
@@ -34,65 +29,11 @@ export function Hero() {
           aria-hidden
         />
 
-        <div className="absolute inset-0 flex items-start">
-          <div className="container-wide pt-4 md:pt-6">
-            <div className="ml-auto md:ml-[50%] max-w-xl rounded-2xl border border-neon-orange/20 bg-background/55 p-5 shadow-2xl shadow-black/40 backdrop-blur-md md:p-6">
-              <Badge variant="accent">
-                <Sparkles className="mr-1.5 h-3 w-3" />
-                CLAUDE AI + MT4 / MT5
-              </Badge>
-
-              <h1 className="mt-4 text-balance text-2xl font-semibold leading-[1.1] tracking-tight md:text-4xl lg:text-[2.75rem]">
-                Build Profitable{" "}
-                <span className="text-gradient-orange text-glow-orange">
-                  MT4 &amp; MT5 EAs
-                </span>{" "}
-                with Claude AI
-              </h1>
-
-              <p className="mt-3 text-sm text-foreground/85 md:text-base">
-                No coding experience needed{" "}
-                <span className="text-neon-orange">•</span> Claude Code{" "}
-                <span className="text-neon-orange">•</span> VS Code{" "}
-                <span className="text-neon-orange">•</span> MT4 / MT5
-              </p>
-
-              <div className="mt-5 flex flex-wrap items-center gap-2.5">
-                <Button asChild size="lg">
-                  <Link href="/backtests">
-                    Browse Backtests
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <a
-                    href="https://youtube.com/@claudetradehq"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Youtube className="h-4 w-4 text-neon-red" />
-                    Watch Tutorials on YouTube
-                  </a>
-                </Button>
-              </div>
-
-              <a
-                href="https://x.com/ClaudeTradeHQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-neon-orange"
-              >
-                <XIcon className="h-3.5 w-3.5" />
-                Follow{" "}
-                <span className="font-medium text-foreground">
-                  @ClaudeTradeHQ
-                </span>{" "}
-                on X
-                <ArrowRight className="h-3 w-3 opacity-60" />
-              </a>
-            </div>
-          </div>
-        </div>
+        {/* The hero is a clean banner image — no overlay panel. The h1 is kept
+            for SEO/screen readers only, since the page still needs one. */}
+        <h1 className="sr-only">
+          Build Profitable MT4 &amp; MT5 EAs with Claude AI
+        </h1>
       </div>
 
       <div className="container-wide mt-10">
