@@ -15,6 +15,10 @@
 export const FXBLUE_ACCOUNTS = [
   { id: "ClaudeTradeHQ", label: "ClaudeTradeHQ" },
   { id: "ClaudeTradeHQ_081926", label: "ClaudeTradeHQ_081926" },
+  {
+    id: "ClaudeTradeHQthe5ers",
+    label: "ClaudeTradeHQ - The5ers 10K Challenge",
+  },
 ] as const;
 
 /**
