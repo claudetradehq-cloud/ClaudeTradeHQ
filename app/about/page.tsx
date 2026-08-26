@@ -61,6 +61,23 @@ export default function AboutPage() {
           The goal is to publish the kind of trading content we wished existed
           when we started: real strategies, real PnL, real failures.
         </p>
+        <p className="mt-4 text-muted-foreground">
+          The desk doesn&rsquo;t sell an off-the-shelf robot. Dan builds{" "}
+          <Link
+            href="/downloads"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            custom Expert Advisors
+          </Link>{" "}
+          around the concepts you can watch trading live on the{" "}
+          <Link
+            href="/fx-blue-links"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            FX Blue Links page
+          </Link>
+          , each one whitelisted to a single account number.
+        </p>
       </header>
 
       <div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
@@ -177,7 +194,7 @@ export default function AboutPage() {
             <Link href="/backtests">Browse backtests</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link href="/downloads">Download the EA</Link>
+            <Link href="/downloads">Get a custom EA built</Link>
           </Button>
         </div>
       </div>

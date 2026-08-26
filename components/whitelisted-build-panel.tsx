@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { Lock, ShieldCheck } from "lucide-react";
-
-const CONTACT_EMAIL = "claudetradehq@gmail.com";
+import { Button } from "@/components/ui/button";
+import { ContactEmailBanner } from "@/components/contact-email-banner";
 
 export function WhitelistedBuildPanel() {
   return (
@@ -15,13 +16,10 @@ export function WhitelistedBuildPanel() {
             Want a build locked to your trading account?
           </h2>
           <p className="mt-4 text-sm text-muted-foreground">
-            The public{" "}
-            <span className="mono text-foreground">ClaudeTradeHQ-0.01</span>{" "}
-            download is the free, unlocked demo &mdash; anyone can run it on
-            any account. For{" "}
+            There is no public EA download &mdash; every Expert Advisor is built
+            to order. For{" "}
             <span className="text-foreground">funded-account challenges</span>{" "}
-            or{" "}
-            <span className="text-foreground">live capital</span>, I issue
+            or <span className="text-foreground">live capital</span>, Dan issues
             individual builds with an{" "}
             <span className="text-foreground">account-number whitelist</span>{" "}
             baked into the binary. The EA refuses to trade on any account that
@@ -29,17 +27,25 @@ export function WhitelistedBuildPanel() {
             resold downstream.
           </p>
           <p className="mt-4 text-sm text-muted-foreground">
-            Adjustable position sizing, custom risk caps, and broker locks can
-            be included in the whitelisted build on request.
+            Adjustable position sizing, custom risk caps, prop-firm rule limits,
+            and broker locks can all be included on request. The concepts come
+            from the accounts published on the{" "}
+            <Link
+              href="/fx-blue-links"
+              className="text-neon-orange underline-offset-4 hover:underline"
+            >
+              FX Blue Links page
+            </Link>
+            .
           </p>
 
-          <div className="mt-6">
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Apply by email
-            </div>
-            <div className="mono mt-2 text-2xl font-semibold tracking-tight text-neon-orange md:text-3xl">
-              {CONTACT_EMAIL}
-            </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button asChild size="sm">
+              <Link href="/downloads">How custom builds work</Link>
+            </Button>
+            <Button asChild size="sm" variant="outline">
+              <Link href="/fx-blue-links">See the live accounts</Link>
+            </Button>
           </div>
         </div>
 
@@ -51,12 +57,18 @@ export function WhitelistedBuildPanel() {
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
               Your MT4 or MT5 account number is required to whitelist. You will
-              be replied via email with your updated EA for your trading
+              be replied to by email with the build set up for your trading
               account.
             </p>
           </div>
         </aside>
       </div>
+
+      <ContactEmailBanner
+        eyebrow="Apply by email"
+        note="Send your account number, broker, and account size. Quotes and timelines come back by reply."
+        className="mt-8 border-neon-orange/30"
+      />
     </section>
   );
 }

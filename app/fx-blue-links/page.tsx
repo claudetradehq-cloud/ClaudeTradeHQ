@@ -53,6 +53,18 @@ export default async function FxBlueLinksPage() {
           third-party numbers &mdash; no screenshots, no cherry-picking. Click
           through to any account to inspect the full trade history yourself.
         </p>
+        <p className="mt-4 text-muted-foreground">
+          Like what these accounts are doing? Dan builds the same concepts into
+          a{" "}
+          <Link
+            href="/downloads"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            custom EA for your own account
+          </Link>{" "}
+          &mdash; re-tuned to your balance, broker, and symbol, then whitelisted
+          to your account number.
+        </p>
         <div className="mt-6 flex flex-wrap items-center gap-2 text-xs">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-neon-green/30 bg-neon-green/10 px-3 py-1 font-semibold uppercase tracking-[0.18em] text-neon-green">
             <Signal className="h-3 w-3" />
@@ -167,15 +179,16 @@ export default async function FxBlueLinksPage() {
 
       <div className="mt-14 flex flex-col items-center gap-4 text-center">
         <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          Want to run the same EA?
+          Want these concepts running on your account?
         </h2>
         <p className="max-w-xl text-sm text-muted-foreground">
-          The public build is a free download. For live capital I issue builds
-          whitelisted to your account number.
+          There&rsquo;s no public download. Dan builds each EA to order on the
+          concepts driving the accounts above, then whitelists it to your
+          account number so it can only trade where you say.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
-            <Link href="/downloads">Download the EA</Link>
+            <Link href="/downloads">Have Dan build your EA</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
             <Link href="/backtests">View the backtests</Link>

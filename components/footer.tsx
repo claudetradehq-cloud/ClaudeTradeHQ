@@ -49,7 +49,7 @@ export function Footer() {
           title="Product"
           links={[
             { href: "/backtests", label: "Backtests" },
-            { href: "/downloads", label: "Downloads" },
+            { href: "/downloads", label: "Custom EA builds" },
             { href: "/fx-blue-links", label: "FX Blue Links" },
             { href: "/about", label: "About" },
           ]}

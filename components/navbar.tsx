@@ -11,7 +11,7 @@ import { XIcon } from "@/components/icons/x-icon";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/backtests", label: "Backtests" },
-  { href: "/downloads", label: "Downloads" },
+  { href: "/downloads", label: "Custom EA" },
   { href: "/fx-blue-links", label: "FX Blue Links" },
   { href: "/about", label: "About" },
 ];
@@ -96,7 +96,7 @@ export function Navbar() {
             </a>
           </Button>
           <Button asChild size="sm" variant="accent" className="hidden sm:inline-flex">
-            <Link href="/downloads">Get the EA</Link>
+            <Link href="/downloads">Get a custom EA</Link>
           </Button>
         </div>
       </div>

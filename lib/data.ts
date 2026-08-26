@@ -280,6 +280,11 @@ export const timeframes = ["M5", "M15", "M30", "H1", "H4", "D1"] as const;
 
 export const statuses: BacktestStatus[] = ["live", "archived", "experimental"];
 
+/**
+ * Reference builds the custom-EA service is quoted against. Nothing here is a
+ * public file download any more — /downloads is the "have Dan build it" page,
+ * and every EA leaves the desk whitelisted to a specific account number.
+ */
 export interface ExpertAdvisor {
   id: string;
   name: string;
@@ -292,9 +297,6 @@ export interface ExpertAdvisor {
   asset: string;
   timeframe: string;
   version: string;
-  mt4File: string | null;
-  mt5File: string | null;
-  available: boolean;
 }
 
 export const expertAdvisors: ExpertAdvisor[] = [
@@ -303,16 +305,13 @@ export const expertAdvisors: ExpertAdvisor[] = [
     name: "ClaudeTradeHQ-0.01",
     tagline: "Elite ClaudeTrade bias EA with locked institutional defaults.",
     description:
-      "MT5 Expert Advisor built on an Elite ClaudeTrade bias model. Ships with locked defaults — no user-editable inputs — so every account runs identical risk, timing, and exit logic. Includes session filter, daily-range gate, smart-trail equity exits, and directional drawdown protection.",
+      "MT5 Expert Advisor built on an Elite ClaudeTrade bias model, and the reference build most custom EAs start from. Session filter, daily-range gate, smart-trail equity exits, and directional drawdown protection, wired to a locked risk profile so every account runs identical timing and exit logic.",
     usageNotes:
-      "$1,000 starting balance advisable. Position size is hard-coded to 0.01. Let the bot do its job — do not interfere with open positions. IMPORTANT: this EA must be loaded onto a GBPUSD M30 chart, and it's strongly recommended to run MT5 24/7 on a VPS.",
+      "As tuned for the reference account: $1,000 starting balance, 0.01 fixed position size, GBPUSD M30, MT5 running 24/7 on a VPS. Your build gets these re-tuned to your account size, symbol, and broker conditions.",
     backtestSlug: "claudetradehq-0-01",
     strategy: "Bias",
     asset: "GBPUSD",
     timeframe: "M30",
     version: "0.01",
-    mt4File: null,
-    mt5File: "ClaudeTradeHQ-0.01.ex5",
-    available: true,
   },
 ];

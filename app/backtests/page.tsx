@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BacktestGrid } from "@/components/backtest-grid";
 import { WhitelistedBuildPanel } from "@/components/whitelisted-build-panel";
 
@@ -22,6 +23,24 @@ export default function BacktestsPage() {
           Filter by strategy family, asset class, timeframe, or live status.
           Retired strategies stay visible — the failures matter as much as the
           winners.
+        </p>
+        <p className="mt-4 text-muted-foreground">
+          Seen one you want on your own account? These are the concepts Dan
+          builds into{" "}
+          <Link
+            href="/downloads"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            custom Expert Advisors
+          </Link>
+          , and you can watch them trading live on the{" "}
+          <Link
+            href="/fx-blue-links"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            FX Blue Links page
+          </Link>
+          .
         </p>
       </header>
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Wrench } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WhitelistedBuildPanel } from "@/components/whitelisted-build-panel";
@@ -19,7 +19,7 @@ export default function CthqBacktestPage() {
         className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        Back to downloads
+        Back to custom EA builds
       </Link>
 
       <header className="mt-6 mb-10 max-w-3xl">
@@ -39,12 +39,32 @@ export default function CthqBacktestPage() {
           GBPUSD, M30, run with $1,000 starting capital, 0.01 fixed position
           size, and 100% history quality. Every trade is logged below.
         </p>
+        <p className="mt-4 text-muted-foreground">
+          This build isn&rsquo;t a public download. It&rsquo;s the reference EA
+          that{" "}
+          <Link
+            href="/downloads"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            custom builds
+          </Link>{" "}
+          are based on &mdash; re-tuned to your account size, broker, and
+          symbol, then whitelisted to your account number. You can watch the
+          same concepts trading live on the{" "}
+          <Link
+            href="/fx-blue-links"
+            className="text-neon-orange underline-offset-4 hover:underline"
+          >
+            FX Blue Links page
+          </Link>
+          .
+        </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild size="sm">
-            <a href="/expert-advisors/ClaudeTradeHQ-0.01.ex5" download>
-              <Download className="h-3.5 w-3.5" />
-              Download MT5 (.ex5)
-            </a>
+            <Link href="/downloads">
+              <Wrench className="h-3.5 w-3.5" />
+              Have this EA built for your account
+            </Link>
           </Button>
           <Button asChild size="sm" variant="outline">
             <a

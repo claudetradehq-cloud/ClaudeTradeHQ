@@ -57,6 +57,16 @@ When working in this project, always start your prompt with:
 - Never hand-edit numbers in `lib/fxblue-data.json` — it is generated output.
   Regenerate with `npm run fxblue`.
 - Every detailed backtest report page under `app/backtests/<slug>/page.tsx` must render `<WhitelistedBuildPanel />` (from `components/whitelisted-build-panel.tsx`) between the trade-stats grid and the disclaimer block. It is the funnel from a convinced viewer into the funded/live whitelisted-EA email path. The archive page at `/backtests` and the `/downloads` page render it too. Pattern set by `app/backtests/claudetradehq-0-01/page.tsx`.
+- **No public EA file downloads.** `/downloads` is the "have Dan build your
+  custom EA" service page — never re-add a `.ex4`/`.ex5` link or a
+  `public/expert-advisors/` binary. `expertAdvisors` in `lib/data.ts` is the
+  reference-build catalogue the service is quoted against, not a file list.
+- `/downloads` and `/fx-blue-links` link to each other, and every page links to
+  `/downloads` from its body copy. Keep both directions intact when editing.
+- Show the contact email **only** through `<ContactEmailBanner />`
+  (`components/contact-email-banner.tsx`). It assembles the address in the
+  browser after mount so the server HTML never contains a scrapeable
+  `name@domain` string — never hard-code the address in JSX.
 
 ## Deployment
 - Push to `main` branch → Vercel auto-deploys
