@@ -5,12 +5,14 @@ import {
   AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
+  BarChart3,
   ExternalLink,
   RefreshCw,
   Server,
   ShieldCheck,
   Signal,
 } from "lucide-react";
+import { FxBlueCapitalChart } from "@/components/fxblue-capital-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -20,6 +22,7 @@ import {
   getFxBlueAccounts,
   signOf,
   splitAccounts,
+  toCapitalSeries,
   type FxBlueAccount,
 } from "@/lib/fxblue";
 
@@ -35,6 +38,7 @@ export const revalidate = 1800;
 export default async function FxBlueLinksPage() {
   const { accounts, staleIds } = await getFxBlueAccounts();
   const { demo: demoAccounts, live: liveAccounts } = splitAccounts(accounts);
+  const capital = toCapitalSeries(accounts, staleIds);
   const refreshMinutes = Math.round(REVALIDATE_SECONDS / 60);
 
   return (
@@ -124,6 +128,20 @@ export default async function FxBlueLinksPage() {
         ) : (
           <EmptyState kind="live" />
         )}
+      </section>
+
+      <Separator className="my-14" />
+
+      <section className="mb-14">
+        <SectionHeading
+          icon={BarChart3}
+          title="Capital across every account"
+          count={capital.length}
+          blurb="One view of where the capital actually sits right now — closed balance against equity, demo and live together. New accounts appear here automatically as they are added above."
+        />
+        <div className="mt-6">
+          <FxBlueCapitalChart data={capital} />
+        </div>
       </section>
 
       <section className="mb-14 grid gap-5 md:grid-cols-3">

@@ -36,6 +36,8 @@ When working in this project, always start your prompt with:
 - Run `npm run fxblue` so the offline fallback covers the new account too
 - The page splits accounts into Demo vs Live automatically off FX Blue's
   `Account type` field (`Real` → Live section), so no page edit is needed
+- The "Capital across every account" chart picks the new account up on its own —
+  it maps over the same fetch, and the layout scales with the account count
 - All accounts run 24/7 on a dedicated VPS; keep that framing in the copy
 
 **How `/fx-blue-links` gets its numbers:**
@@ -48,6 +50,18 @@ When working in this project, always start your prompt with:
 - `lib/fxblue-data.json` is the fallback if FX Blue is unreachable. Cards served
   from it are labelled "cached — FX Blue unreachable" rather than passing stale
   numbers off as current
+- `<FxBlueCapitalChart />` (`components/fxblue-capital-chart.tsx`) plots balance
+  vs equity for every account. It takes rows from `toCapitalSeries()` in
+  `lib/fxblue.ts` — the *same* fetch the cards use, so chart and cards can never
+  disagree. It never fetches on its own; don't give it a second data source
+- The chart's two series hexes (`#DC5200` balance, `#00A3C7` equity) are a step
+  deeper than the `--neon` brand colours because they were validated as a
+  categorical pair against the dark card surface (lightness band, chroma floor,
+  colour-blind separation, contrast). Re-validate before changing them, and keep
+  balance in the first slot so adding an account never repaints a series
+- Point-in-time only: FX Blue's statement exposes current balance/equity, not a
+  history series. A growth-over-time chart would need snapshots persisted on a
+  schedule (cron → store), so link out to FX Blue for curves instead of faking one
 
 ## Important Rules
 - Always run `npm run build` before committing
