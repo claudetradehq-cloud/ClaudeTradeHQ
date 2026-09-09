@@ -47,6 +47,17 @@ When working in this project, always start your prompt with:
   the refresh script — fix a markup change in one place only
 - `www.fxblue.com` is client-rendered and returns nothing to `fetch`; scrape
   `api.fxblue.com/users/<id>`, which is still server-rendered
+- **The accounts are PIN-gated.** `api.fxblue.com` accepts the view PIN as a
+  `?pin=` query param (no cookie round-trip), which `statementUrl()` in
+  `lib/fxblue-parse.ts` appends. The PIN lives in `FXBLUE_PIN` only — never in
+  the repo and never `NEXT_PUBLIC_*`, because it is a deliberate gate on the
+  accounts. `.env.local` locally (loaded by `npm run fxblue` via
+  `--env-file-if-exists`), Vercel env vars in production; see `.env.example`
+- A PIN-less request gets HTTP **200** with a short "you need a PIN code" page,
+  not a 4xx, so `isPinGate()` sniffs for that prompt. Without it a gated fetch
+  would parse as a markup change instead of an auth failure. If the cards ever
+  all read "cached — FX Blue unreachable", check `FXBLUE_PIN` first — the server
+  log says whether it is unset or rejected
 - `lib/fxblue-data.json` is the fallback if FX Blue is unreachable. Cards served
   from it are labelled "cached — FX Blue unreachable" rather than passing stale
   numbers off as current
@@ -69,7 +80,7 @@ When working in this project, always start your prompt with:
 - All images go in `/public` folder
 - Keep strong disclaimers ("Not financial advice")
 - Never hand-edit numbers in `lib/fxblue-data.json` — it is generated output.
-  Regenerate with `npm run fxblue`.
+  Regenerate with `npm run fxblue` (needs `FXBLUE_PIN` in `.env.local`).
 - Every detailed backtest report page under `app/backtests/<slug>/page.tsx` must render `<WhitelistedBuildPanel />` (from `components/whitelisted-build-panel.tsx`) between the trade-stats grid and the disclaimer block. It is the funnel from a convinced viewer into the funded/live whitelisted-EA email path. The archive page at `/backtests` and the `/downloads` page render it too. Pattern set by `app/backtests/claudetradehq-0-01/page.tsx`.
 - **No public EA file downloads.** `/downloads` is the "have Dan build your
   custom EA" service page — never re-add a `.ex4`/`.ex5` link or a

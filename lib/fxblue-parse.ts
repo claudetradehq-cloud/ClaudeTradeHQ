@@ -9,7 +9,47 @@
  *
  * Keep this file free of Next.js and React imports — it has to run under plain
  * Node too.
+ *
+ * The accounts are PIN-protected on FX Blue. The statement URL accepts the PIN
+ * as a `?pin=` query param, which is all the gate needs — no cookie round-trip.
+ * The PIN lives in FXBLUE_PIN (env), never in this repo: it is a deliberate gate
+ * on the accounts, so it must not reach the browser or a public commit.
  */
+
+/**
+ * The view PIN set on the FX Blue accounts. Server-side only — do NOT rename
+ * this to NEXT_PUBLIC_*, which would inline it into the client bundle.
+ *
+ *   local  → .env.local (gitignored); `npm run fxblue` loads it via --env-file
+ *   Vercel → Settings → Environment Variables, all environments
+ *
+ * Unset is not fatal: the fetch just hits the PIN gate, `fetchFxBlueAccount`
+ * returns null, and callers fall back to the committed snapshot.
+ *
+ * Read per call rather than at module scope so the value comes from the running
+ * server's environment, not from whatever was present when the module loaded.
+ */
+const fxBluePin = () => process.env.FXBLUE_PIN?.trim() || undefined;
+
+/**
+ * Server-rendered statement URL for an account, PIN attached when configured.
+ * Not for public linking — use `publicUrl` on the parsed account for that.
+ */
+export function statementUrl(id: string): string {
+  const url = new URL(`https://api.fxblue.com/users/${id}`);
+  const pin = fxBluePin();
+  if (pin) url.searchParams.set("pin", pin);
+  return url.toString();
+}
+
+/**
+ * FX Blue answers a PIN-less request with 200 and a short "you need a PIN"
+ * page rather than a 4xx, so the only way to tell that case apart from a
+ * markup change is to look for the prompt.
+ */
+function isPinGate(html: string): boolean {
+  return /need\s+PIN\s+code|enter a PIN code/i.test(html);
+}
 
 /** Accounts published on /fx-blue-links. Add new ones here. */
 export const FXBLUE_ACCOUNTS = [
@@ -139,16 +179,26 @@ export async function fetchFxBlueAccount(
   revalidate?: number,
 ): Promise<FxBlueAccount | null> {
   try {
-    const res = await fetch(`https://api.fxblue.com/users/${account.id}`, {
+    const res = await fetch(statementUrl(account.id), {
       headers: { "User-Agent": "Mozilla/5.0 (ClaudeTradeHQ site)" },
       ...(revalidate === undefined ? {} : { next: { revalidate } }),
     } as RequestInit);
     if (!res.ok) return null;
 
+    const html = await res.text();
+    if (isPinGate(html)) {
+      console.error(
+        `FX Blue: ${account.id} is PIN-gated and FXBLUE_PIN is ${
+          fxBluePin() ? "set but rejected" : "not set"
+        } — serving the cached snapshot instead.`,
+      );
+      return null;
+    }
+
     const parsed = mapStatement(
       account.id,
       account.label,
-      parsePairs(stripTags(await res.text())),
+      parsePairs(stripTags(html)),
     );
 
     // Balance is the one field that must be present; if the markup shifts and
