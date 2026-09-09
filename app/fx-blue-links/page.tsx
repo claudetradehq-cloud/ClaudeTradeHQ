@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
   BarChart3,
   ExternalLink,
+  KeyRound,
   RefreshCw,
   Server,
   ShieldCheck,
@@ -91,6 +92,32 @@ export default async function FxBlueLinksPage() {
           count={demoAccounts.length}
           blurb="Forward-testing the current builds on live market data. Same VPS, same execution path as the live accounts — only the capital is simulated."
         />
+        <div className="surface mt-6 flex flex-col gap-4 p-6 sm:flex-row sm:items-start">
+          <KeyRound className="h-6 w-6 shrink-0 text-neon-orange" />
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <h3 className="text-base font-semibold text-foreground">
+              Need the FX Blue PIN?
+            </h3>
+            <p>
+              The statements are PIN-protected. For the PIN number, DM Dan on X
+              at{" "}
+              <a
+                href="https://x.com/ClaudeTradeHQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mono text-neon-orange underline-offset-4 hover:underline"
+              >
+                x.com/ClaudeTradeHQ
+              </a>{" "}
+              &mdash; the link opens the profile in your browser or the X app,
+              whichever you use.
+            </p>
+            <p>
+              Once you open the FX Blue statistics you&rsquo;ll have a
+              bird&rsquo;s-eye view of the EAs in action!
+            </p>
+          </div>
+        </div>
         {demoAccounts.length > 0 ? (
           <div className="mt-6 space-y-5">
             {demoAccounts.map((a) => (
