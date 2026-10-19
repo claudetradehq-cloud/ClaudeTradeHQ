@@ -33,6 +33,10 @@ When working in this project, always start your prompt with:
 
 **Add an FX Blue account (`/fx-blue-links`):**
 - Add it to `FXBLUE_ACCOUNTS` in `lib/fxblue-parse.ts` — that's the only edit needed
+- The viewer PIN is `FXBLUE_PIN` in the environment. Never render it, never put
+  it in JSX, and never commit it. VuCuBit account PINs are separate and can differ
+- If FX Blue publishes the statement under a different user id, set `fxBlueId`
+  and keep `id` as the panel id so the label and the fallback snapshot still match
 - Run `npm run fxblue` so the offline fallback covers the new account too
 - The page splits accounts into Demo vs Live automatically off FX Blue's
   `Account type` field (`Real` → Live section), so no page edit is needed
@@ -45,19 +49,19 @@ When working in this project, always start your prompt with:
   most every 30 min, so published stats track the accounts with no redeploy
 - `lib/fxblue-parse.ts` holds the scraping rules and is shared by the page and
   the refresh script — fix a markup change in one place only
-- `www.fxblue.com` is client-rendered and returns nothing to `fetch`; scrape
-  `api.fxblue.com/users/<id>`, which is still server-rendered
-- **The accounts are PIN-gated.** `api.fxblue.com` accepts the view PIN as a
-  `?pin=` query param (no cookie round-trip), which `statementUrl()` in
-  `lib/fxblue-parse.ts` appends. The PIN lives in `FXBLUE_PIN` only — never in
-  the repo and never `NEXT_PUBLIC_*`, because it is a deliberate gate on the
-  accounts. `.env.local` locally (loaded by `npm run fxblue` via
-  `--env-file-if-exists`), Vercel env vars in production; see `.env.example`
-- A PIN-less request gets HTTP **200** with a short "you need a PIN code" page,
-  not a 4xx, so `isPinGate()` sniffs for that prompt. Without it a gated fetch
-  would parse as a markup change instead of an auth failure. If the cards ever
-  all read "cached — FX Blue unreachable", check `FXBLUE_PIN` first — the server
-  log says whether it is unset or rejected
+- `www.fxblue.com` is client-rendered and returns nothing to `fetch`.
+  `api.fxblue.com/users/<id>` is server-rendered and PIN-gated. The parser
+  POSTs `FXBLUE_PIN` to `api.fxblue.com/_NeedPin.aspx`, then GETs the statement
+  with the `MTIPin` cookie. The PIN lives in the environment only — `.env.local`
+  locally (loaded by `npm run fxblue`), Vercel env vars in production. Never
+  `NEXT_PUBLIC_*`, never in the repo, never in HTML. VuCuBit account PINs are
+  separate and can differ; do not reuse them here
+- A PIN-less request gets HTTP 200 with a "Need PIN code" page, not a 4xx. If
+  the cards read "cached — FX Blue unreachable", check `FXBLUE_PIN` first. The
+  server log says whether it is unset or rejected
+- `ClaudeTradeHQ_081926` is fetched as FX Blue user `VuCuBit_Demo_` (`fxBlueId`)
+  because FX Blue has no user by the old id. The panel label stays
+  `ClaudeTradeHQ_081926`. Its public link is that user's statement
 - `lib/fxblue-data.json` is the fallback if FX Blue is unreachable. Cards served
   from it are labelled "cached — FX Blue unreachable" rather than passing stale
   numbers off as current

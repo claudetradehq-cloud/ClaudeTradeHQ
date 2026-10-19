@@ -1,65 +1,54 @@
 /**
  * Shared FX Blue statement parser.
  *
- * The modern www.fxblue.com UI is client-rendered and yields nothing to a plain
- * fetch, but api.fxblue.com/users/<id> still serves a server-rendered statement.
- * This module is imported by BOTH the /fx-blue-links page (at request time, via
- * ISR) and scripts/fetch-fxblue.ts (to refresh the committed fallback), so the
- * scraping rules live in exactly one place.
+ * www.fxblue.com is client-rendered and yields nothing to a plain fetch.
+ * api.fxblue.com/users/<id> is still server-rendered, but each statement asks
+ * for a viewer PIN first. Posting the PIN sets an MTIPin cookie; the statement
+ * request then sends that cookie.
+ *
+ * This module is imported by BOTH the /fx-blue-links page (at request time) and
+ * scripts/fetch-fxblue.mts (to refresh the committed fallback), so the scraping
+ * rules live in exactly one place.
  *
  * Keep this file free of Next.js and React imports — it has to run under plain
- * Node too.
- *
- * The accounts are PIN-protected on FX Blue. The statement URL accepts the PIN
- * as a `?pin=` query param, which is all the gate needs — no cookie round-trip.
- * The PIN lives in FXBLUE_PIN (env), never in this repo: it is a deliberate gate
- * on the accounts, so it must not reach the browser or a public commit.
+ * Node too. The viewer PIN is FXBLUE_PIN, read per call from the environment.
+ * It must never be rendered, and it must not be committed.
  */
 
+export type FxBlueSource = {
+  id: string;
+  label: string;
+  /**
+   * FX Blue user id when the published statement is no longer under `id`.
+   * The panel id stays put so the label and the fallback snapshot still match.
+   */
+  fxBlueId?: string;
+  publicUrl?: string;
+};
+
 /**
- * The view PIN set on the FX Blue accounts. Server-side only — do NOT rename
- * this to NEXT_PUBLIC_*, which would inline it into the client bundle.
- *
- *   local  → .env.local (gitignored); `npm run fxblue` loads it via --env-file
- *   Vercel → Settings → Environment Variables, all environments
- *
- * Unset is not fatal: the fetch just hits the PIN gate, `fetchFxBlueAccount`
- * returns null, and callers fall back to the committed snapshot.
- *
- * Read per call rather than at module scope so the value comes from the running
- * server's environment, not from whatever was present when the module loaded.
+ * ClaudeTradeHQ viewer PIN. Not the VuCuBit site's pins — those accounts are
+ * separate and can differ. Read per call so the value comes from the running
+ * server, not from whatever was present when the module loaded.
  */
 const fxBluePin = () => process.env.FXBLUE_PIN?.trim() || undefined;
-
-/**
- * Server-rendered statement URL for an account, PIN attached when configured.
- * Not for public linking — use `publicUrl` on the parsed account for that.
- */
-export function statementUrl(id: string): string {
-  const url = new URL(`https://api.fxblue.com/users/${id}`);
-  const pin = fxBluePin();
-  if (pin) url.searchParams.set("pin", pin);
-  return url.toString();
-}
-
-/**
- * FX Blue answers a PIN-less request with 200 and a short "you need a PIN"
- * page rather than a 4xx, so the only way to tell that case apart from a
- * markup change is to look for the prompt.
- */
-function isPinGate(html: string): boolean {
-  return /need\s+PIN\s+code|enter a PIN code/i.test(html);
-}
 
 /** Accounts published on /fx-blue-links. Add new ones here. */
 export const FXBLUE_ACCOUNTS = [
   { id: "ClaudeTradeHQ", label: "ClaudeTradeHQ" },
-  { id: "ClaudeTradeHQ_081926", label: "ClaudeTradeHQ_081926" },
+  {
+    id: "ClaudeTradeHQ_081926",
+    label: "ClaudeTradeHQ_081926",
+    // FX Blue has no user called ClaudeTradeHQ_081926. The statement this
+    // panel links to is published as VuCuBit_Demo_.
+    fxBlueId: "VuCuBit_Demo_",
+    publicUrl: "https://www.fxblue.com/users/VuCuBit_Demo_",
+  },
   {
     id: "ClaudeTradeHQthe5ers",
     label: "ClaudeTradeHQ - The5ers 10K Challenge",
   },
-] as const;
+] as const satisfies readonly FxBlueSource[];
 
 /**
  * Snapshot of one FX Blue account. Values stay as the pre-formatted strings FX
@@ -134,12 +123,13 @@ export function mapStatement(
   id: string,
   label: string,
   p: Record<string, string>,
+  publicUrl?: string,
 ): FxBlueAccount {
   const get = (k: string) => p[k] ?? null;
   return {
     id,
     label,
-    publicUrl: `https://www.fxblue.com/users/${id}`,
+    publicUrl: publicUrl ?? `https://www.fxblue.com/users/${id}`,
     accountType: get("Account type"),
     currency: "USD",
     balance: get("Balance"),
@@ -168,37 +158,85 @@ export function mapStatement(
   };
 }
 
+const FXBLUE_ORIGIN = "https://api.fxblue.com";
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function cookieFrom(response: Response, id: string): string | null {
+  const withGetSetCookie = response.headers as Headers & { getSetCookie?: () => string[] };
+  const parts =
+    typeof withGetSetCookie.getSetCookie === "function" ? withGetSetCookie.getSetCookie() : [];
+  const raw = parts.length > 0 ? parts.join("\n") : (response.headers.get("set-cookie") ?? "");
+  // FX Blue lowercases some user ids in the cookie name. Send the name
+  // exactly as Set-Cookie wrote it.
+  const match = raw.match(new RegExp(`(MTIPin_${escapeRegExp(id)})=([^;\\s]+)`, "i"));
+  return match ? `${match[1]}=${match[2]}` : null;
+}
+
+async function unlockStatement(id: string, pin: string): Promise<string | null> {
+  const response = await fetch(`${FXBLUE_ORIGIN}/_NeedPin.aspx`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "Mozilla/5.0 (ClaudeTradeHQ site)",
+      Referer: `${FXBLUE_ORIGIN}/users/${id}`,
+    },
+    body: new URLSearchParams({ userid: id, pin }).toString(),
+    cache: "no-store",
+  });
+  if (!response.ok) return null;
+  const text = await response.text();
+  if (!text.includes("OKAY")) return null;
+  return cookieFrom(response, id);
+}
+
 /**
- * Fetch and parse one account. Returns null on any network, HTTP, or parse
- * failure so callers can fall back rather than render a half-empty card.
+ * Fetch and parse one account. Returns null on any network, HTTP, PIN, or
+ * parse failure so callers can fall back rather than render a half-empty card.
  *
- * `revalidate` is forwarded to Next's fetch cache; plain Node ignores it.
+ * Callers cache the parsed result. The PIN post and the statement GET stay
+ * uncached so a fresh cookie is not stored under a shared fetch entry.
  */
 export async function fetchFxBlueAccount(
-  account: { id: string; label: string },
-  revalidate?: number,
+  account: FxBlueSource,
 ): Promise<FxBlueAccount | null> {
   try {
-    const res = await fetch(statementUrl(account.id), {
-      headers: { "User-Agent": "Mozilla/5.0 (ClaudeTradeHQ site)" },
-      ...(revalidate === undefined ? {} : { next: { revalidate } }),
-    } as RequestInit);
-    if (!res.ok) return null;
-
-    const html = await res.text();
-    if (isPinGate(html)) {
+    const pin = fxBluePin();
+    if (!pin) {
       console.error(
-        `FX Blue: ${account.id} is PIN-gated and FXBLUE_PIN is ${
-          fxBluePin() ? "set but rejected" : "not set"
-        } — serving the cached snapshot instead.`,
+        `FX Blue: FXBLUE_PIN is not set — serving the cached snapshot for ${account.id}.`,
       );
       return null;
     }
+
+    const userId = account.fxBlueId ?? account.id;
+    const cookie = await unlockStatement(userId, pin);
+    if (!cookie) {
+      console.error(
+        `FX Blue: ${userId} rejected FXBLUE_PIN — serving the cached snapshot for ${account.id}.`,
+      );
+      return null;
+    }
+
+    const res = await fetch(`${FXBLUE_ORIGIN}/users/${userId}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (ClaudeTradeHQ site)",
+        Cookie: cookie,
+      },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+
+    const html = await res.text();
+    if (/Need PIN code/i.test(html)) return null;
 
     const parsed = mapStatement(
       account.id,
       account.label,
       parsePairs(stripTags(html)),
+      account.publicUrl,
     );
 
     // Balance is the one field that must be present; if the markup shifts and

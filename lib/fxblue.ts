@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import snapshot from "./fxblue-data.json";
 import {
   FXBLUE_ACCOUNTS,
@@ -18,29 +19,39 @@ export type FxBlueResult = {
   staleIds: string[];
 };
 
+const loadLive = unstable_cache(
+  async (id: string) => {
+    const config = FXBLUE_ACCOUNTS.find((account) => account.id === id);
+    if (!config) return null;
+    return fetchFxBlueAccount(config);
+  },
+  ["cthq-fxblue-statement"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+
 /**
  * Live stats for every tracked account, refetched at most once per
  * REVALIDATE_SECONDS. If FX Blue is unreachable for an account we serve the
  * committed snapshot from `npm run fxblue` and report it as stale so the page
- * can label it rather than passing old numbers off as current.
+ * can label it rather than passing old numbers off as current. The PIN stays
+ * in FXBLUE_PIN and is not returned.
  */
 export async function getFxBlueAccounts(): Promise<FxBlueResult> {
-  const results = await Promise.all(
-    FXBLUE_ACCOUNTS.map((a) => fetchFxBlueAccount(a, REVALIDATE_SECONDS)),
-  );
+  const results = await Promise.all(FXBLUE_ACCOUNTS.map((a) => loadLive(a.id)));
 
   const accounts: FxBlueAccount[] = [];
   const staleIds: string[] = [];
 
   results.forEach((live, i) => {
     const meta = FXBLUE_ACCOUNTS[i];
-    if (live) {
-      accounts.push(live);
+    const publicUrl = "publicUrl" in meta ? meta.publicUrl : undefined;
+    if (live?.balance) {
+      accounts.push(publicUrl ? { ...live, publicUrl } : live);
       return;
     }
     const cached = fallback.find((a) => a.id === meta.id);
     if (cached) {
-      accounts.push(cached);
+      accounts.push(publicUrl ? { ...cached, publicUrl } : cached);
       staleIds.push(meta.id);
     }
   });
