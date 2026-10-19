@@ -3,21 +3,21 @@
     {
       "id": "ClaudeTradeHQ",
       "label": "ClaudeTradeHQ",
-      "publicUrl": "https://www.fxblue.com/users/ClaudeTradeHQ",
+      "publicUrl": "https://www.fxblue.com/users/VuCuBit_25K",
       "accountType": "Demo",
       "currency": "USD",
       "balance": "28,953.09",
       "equity": "28,921.52",
       "floatingPl": "-31.57",
       "closedProfit": "+3,953.09",
-      "totalReturn": "+15.7%",
+      "totalReturn": "+15.8%",
       "monthlyReturn": "+3.4%",
       "weeklyReturn": "+0.8%",
       "peakDrawdown": "-6.0%",
       "tradeWinPct": "65.7%",
       "profitFactor": "1.21",
       "pips": "-1,600.8",
-      "tradesPerDay": "9.1",
+      "tradesPerDay": "9.0",
       "history": "129 days",
       "riskRewardRatio": "3.76",
       "worstDay": "-1168.81",
@@ -28,7 +28,7 @@
       "avgResult": "+3.40",
       "avgWin": "+29.82",
       "avgLoss": "-47.21",
-      "lastUpdate": "16:55:43"
+      "lastUpdate": "2026/10/17"
     },
     {
       "id": "ClaudeTradeHQ_081926",
@@ -63,7 +63,7 @@
     {
       "id": "ClaudeTradeHQthe5ers",
       "label": "ClaudeTradeHQ - The5ers 10K Challenge",
-      "publicUrl": "https://www.fxblue.com/users/ClaudeTradeHQthe5ers",
+      "publicUrl": "https://www.fxblue.com/users/vucubit_The5ers",
       "accountType": "Demo",
       "currency": "USD",
       "balance": "10,493.12",
@@ -88,7 +88,7 @@
       "avgResult": "+0.81",
       "avgWin": "+1.31",
       "avgLoss": "-1.63",
-      "lastUpdate": "14:30:32"
+      "lastUpdate": "2026/10/17"
     }
   ]
 }

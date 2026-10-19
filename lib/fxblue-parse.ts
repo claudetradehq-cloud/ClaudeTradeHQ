@@ -24,18 +24,32 @@ export type FxBlueSource = {
    */
   fxBlueId?: string;
   publicUrl?: string;
+  /**
+   * Env var holding this statement's viewer PIN when it is not FXBLUE_PIN.
+   * VuCuBit statements can use a different PIN from the ClaudeTradeHQ one.
+   */
+  pinEnv?: string;
 };
 
 /**
- * ClaudeTradeHQ viewer PIN. Not the VuCuBit site's pins — those accounts are
- * separate and can differ. Read per call so the value comes from the running
- * server, not from whatever was present when the module loaded.
+ * Viewer PIN for one statement. A panel with `pinEnv` reads that variable.
+ * Everything else reads FXBLUE_PIN. Read per call so the value comes from the
+ * running server, not from whatever was present when the module loaded.
  */
-const fxBluePin = () => process.env.FXBLUE_PIN?.trim() || undefined;
+function fxBluePin(account: { pinEnv?: string }): string | undefined {
+  if (account.pinEnv) return process.env[account.pinEnv]?.trim() || undefined;
+  return process.env.FXBLUE_PIN?.trim() || undefined;
+}
 
 /** Accounts published on /fx-blue-links. Add new ones here. */
 export const FXBLUE_ACCOUNTS = [
-  { id: "ClaudeTradeHQ", label: "ClaudeTradeHQ" },
+  {
+    id: "ClaudeTradeHQ",
+    label: "ClaudeTradeHQ",
+    fxBlueId: "VuCuBit_25K",
+    publicUrl: "https://www.fxblue.com/users/VuCuBit_25K",
+    pinEnv: "FXBLUE_PIN_25K",
+  },
   {
     id: "ClaudeTradeHQ_081926",
     label: "ClaudeTradeHQ_081926",
@@ -47,6 +61,9 @@ export const FXBLUE_ACCOUNTS = [
   {
     id: "ClaudeTradeHQthe5ers",
     label: "ClaudeTradeHQ - The5ers 10K Challenge",
+    fxBlueId: "vucubit_The5ers",
+    publicUrl: "https://www.fxblue.com/users/vucubit_The5ers",
+    pinEnv: "FXBLUE_PIN_THE5ERS",
   },
 ] as const satisfies readonly FxBlueSource[];
 
@@ -203,10 +220,11 @@ export async function fetchFxBlueAccount(
   account: FxBlueSource,
 ): Promise<FxBlueAccount | null> {
   try {
-    const pin = fxBluePin();
+    const pinName = account.pinEnv ?? "FXBLUE_PIN";
+    const pin = fxBluePin(account);
     if (!pin) {
       console.error(
-        `FX Blue: FXBLUE_PIN is not set — serving the cached snapshot for ${account.id}.`,
+        `FX Blue: ${pinName} is not set — serving the cached snapshot for ${account.id}.`,
       );
       return null;
     }
@@ -215,7 +233,7 @@ export async function fetchFxBlueAccount(
     const cookie = await unlockStatement(userId, pin);
     if (!cookie) {
       console.error(
-        `FX Blue: ${userId} rejected FXBLUE_PIN — serving the cached snapshot for ${account.id}.`,
+        `FX Blue: ${userId} rejected ${pinName} — serving the cached snapshot for ${account.id}.`,
       );
       return null;
     }
