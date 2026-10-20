@@ -6,7 +6,7 @@
 - **Theme**: Dark cyber-trading with orange (#FF6200) and cyan accents
 
 ## Folder Structure
-- `/app` → Main pages (Home, Backtests, Performance, About)
+- `/app` → Main pages (Home, FX Blue Links, About, Performance)
 - `/components` → Reusable UI components
 - `/lib` → Utilities and data
 - `/public` → Images, banners, logos
@@ -18,10 +18,6 @@ When working in this project, always start your prompt with:
 > "You are working in the ClaudeTradeHQ Next.js website. Current root: /home/dan/ClaudeTradeHQ/CTHQWebsite"
 
 ### Common Tasks
-
-**Add a new backtest:**
-- Put equity curve image in `/public/backtests/`
-- Ask Claude to update `/app/backtests/page.tsx`
 
 **Update Hero Banner:**
 - Replace image in `/public/brand/`
@@ -80,13 +76,14 @@ When working in this project, always start your prompt with:
 - Keep strong disclaimers ("Not financial advice")
 - Never hand-edit numbers in `lib/fxblue-data.json` — it is generated output.
   Regenerate with `npm run fxblue`.
-- Every detailed backtest report page under `app/backtests/<slug>/page.tsx` must render `<WhitelistedBuildPanel />` (from `components/whitelisted-build-panel.tsx`) between the trade-stats grid and the disclaimer block. It is the funnel from a convinced viewer into the funded/live whitelisted-EA email path. The archive page at `/backtests` and the `/downloads` page render it too. Pattern set by `app/backtests/claudetradehq-0-01/page.tsx`.
-- **No public EA file downloads.** `/downloads` is the "have Dan build your
-  custom EA" service page — never re-add a `.ex4`/`.ex5` link or a
-  `public/expert-advisors/` binary. `expertAdvisors` in `lib/data.ts` is the
-  reference-build catalogue the service is quoted against, not a file list.
-- `/downloads` and `/fx-blue-links` link to each other, and every page links to
-  `/downloads` from its body copy. Keep both directions intact when editing.
+- The Backtests section and the Custom EA service page are removed.
+  `/backtests` and `/downloads` redirect to `/`. Do not put those menu names
+  or links back unless Dan asks. Do not re-add a public `.ex4`/`.ex5` download.
+- The homepage sponsorship panel (`components/sponsor-panel.tsx`) sits under
+  the live account cards. It says ClaudeTradeHQ sponsors VuCuBit as a joint
+  trading corporation, links to https://www.vucubit.com/ and
+  https://www.vucubit.com/demo-accounts, and keeps a short risk disclaimer.
+  The logo is `public/brand/vco6.webp`, the transparent cut of `VCO/Logos/vco6.jpg`.
 - Show the contact email **only** through `<ContactEmailBanner />`
   (`components/contact-email-banner.tsx`). It assembles the address in the
   browser after mount so the server HTML never contains a scrapeable

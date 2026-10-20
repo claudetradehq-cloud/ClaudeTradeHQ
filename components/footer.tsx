@@ -23,8 +23,8 @@ export function Footer() {
             </span>
           </Link>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Systematic trading research & education. Audited backtests, live
-            performance, and zero hype.
+            ClaudeTradeHQ sponsors VuCuBit, a joint trading corporation.
+            Live MT5 statements, published in the open.
           </p>
           <div className="flex items-center gap-2 pt-1">
             <SocialLink
@@ -48,8 +48,6 @@ export function Footer() {
         <FooterColumn
           title="Product"
           links={[
-            { href: "/backtests", label: "Backtests" },
-            { href: "/downloads", label: "Custom EA builds" },
             { href: "/fx-blue-links", label: "FX Blue Links" },
             { href: "/about", label: "About" },
           ]}

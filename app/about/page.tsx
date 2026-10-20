@@ -62,21 +62,24 @@ export default function AboutPage() {
           when we started: real strategies, real PnL, real failures.
         </p>
         <p className="mt-4 text-muted-foreground">
-          The desk doesn&rsquo;t sell an off-the-shelf robot. Dan builds{" "}
-          <Link
-            href="/downloads"
+          ClaudeTradeHQ sponsors{" "}
+          <a
+            href="https://www.vucubit.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-neon-orange underline-offset-4 hover:underline"
           >
-            custom Expert Advisors
-          </Link>{" "}
-          around the concepts you can watch trading live on the{" "}
+            VuCuBit
+          </a>
+          . The two desks trade together as one joint trading corporation. The
+          live MT5 statements are on the{" "}
           <Link
             href="/fx-blue-links"
             className="text-neon-orange underline-offset-4 hover:underline"
           >
             FX Blue Links page
           </Link>
-          , each one whitelisted to a single account number.
+          .
         </p>
       </header>
 
@@ -191,10 +194,16 @@ export default function AboutPage() {
         </h2>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
-            <Link href="/backtests">Browse backtests</Link>
+            <Link href="/fx-blue-links">See the live accounts</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link href="/downloads">Get a custom EA built</Link>
+            <a
+              href="https://www.vucubit.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit VuCuBit
+            </a>
           </Button>
         </div>
       </div>

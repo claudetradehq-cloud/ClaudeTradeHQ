@@ -142,18 +142,10 @@ export default function PerformancePage() {
 
       <div className="mt-14 flex flex-col items-center gap-4 text-center">
         <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          Want this running on your account?
+          The live statements are on FX Blue.
         </h2>
-        <p className="max-w-xl text-sm text-muted-foreground">
-          Dan builds a custom Expert Advisor around these concepts, sized to
-          your balance and whitelisted to your account number. The live
-          statements behind them are published on the FX Blue Links page.
-        </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
-            <Link href="/downloads">Have Dan build your EA</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
             <Link href="/fx-blue-links">See the live accounts</Link>
           </Button>
         </div>

@@ -23,12 +23,12 @@ export const metadata: Metadata = {
     template: "%s · ClaudeTradeHQ",
   },
   description:
-    "Backtests, live performance, and educational research from the ClaudeTradeHQ desk. Systematic strategies, audited results, no hype.",
+    "ClaudeTradeHQ sponsors VuCuBit, a joint trading corporation. Live MT5 statements and educational research from the desk.",
   metadataBase: new URL("https://claudetradehq.example"),
   openGraph: {
     title: "ClaudeTradeHQ",
     description:
-      "Backtests, live performance, and educational research from the ClaudeTradeHQ desk.",
+      "ClaudeTradeHQ sponsors VuCuBit. Live MT5 statements from the joint trading corporation.",
     type: "website",
   },
 };

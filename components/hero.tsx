@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { AccountSnapshot } from "@/components/account-snapshot";
+import { SponsorPanel } from "@/components/sponsor-panel";
 
 export function Hero() {
   return (
@@ -25,15 +26,15 @@ export function Hero() {
 
         {/* The hero is a clean banner image — no overlay panel. The h1 is kept
             for SEO/screen readers only, since the page still needs one. */}
-        <h1 className="sr-only">
-          Build Profitable MT4 &amp; MT5 EAs with Claude AI
-        </h1>
+        <h1 className="sr-only">ClaudeTradeHQ sponsors VuCuBit</h1>
       </div>
 
       {/* Live MT5 account profits, shared with /fx-blue-links */}
       <div className="container-wide mt-10">
         <AccountSnapshot />
       </div>
+
+      <SponsorPanel />
 
       <div className="mt-16 glow-divider" />
     </section>

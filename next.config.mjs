@@ -5,6 +5,9 @@ const nextConfig = {
     return [
       // /funded-accounts was rebuilt as the FX Blue statistics page.
       { source: "/funded-accounts", destination: "/fx-blue-links", permanent: true },
+      { source: "/backtests", destination: "/", permanent: true },
+      { source: "/backtests/:path*", destination: "/", permanent: true },
+      { source: "/downloads", destination: "/", permanent: true },
     ];
   },
 };
