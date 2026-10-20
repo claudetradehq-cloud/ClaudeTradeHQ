@@ -1,6 +1,5 @@
 import { Hero } from "@/components/hero";
 import { HowItWorks } from "@/components/how-it-works";
-import { CtaSection } from "@/components/cta-section";
 
 /**
  * The hero snapshot pulls live FX Blue stats, so the home page revalidates on
@@ -13,7 +12,6 @@ export default function HomePage() {
     <>
       <Hero />
       <HowItWorks />
-      <CtaSection />
     </>
   );
 }
