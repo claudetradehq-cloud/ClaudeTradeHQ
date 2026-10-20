@@ -33,8 +33,7 @@ const loadLive = unstable_cache(
  * Live stats for every tracked account, refetched at most once per
  * REVALIDATE_SECONDS. If FX Blue is unreachable for an account we serve the
  * committed snapshot from `npm run fxblue` and report it as stale so the page
- * can label it rather than passing old numbers off as current. The PIN stays
- * in FXBLUE_PIN and is not returned.
+ * can label it rather than passing old numbers off as current.
  */
 export async function getFxBlueAccounts(): Promise<FxBlueResult> {
   const results = await Promise.all(FXBLUE_ACCOUNTS.map((a) => loadLive(a.id)));

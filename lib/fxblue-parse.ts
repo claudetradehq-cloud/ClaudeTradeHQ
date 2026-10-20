@@ -2,17 +2,16 @@
  * Shared FX Blue statement parser.
  *
  * www.fxblue.com is client-rendered and yields nothing to a plain fetch.
- * api.fxblue.com/users/<id> is still server-rendered, but each statement asks
- * for a viewer PIN first. Posting the PIN sets an MTIPin cookie; the statement
- * request then sends that cookie.
+ * api.fxblue.com/users/<id> is server-rendered. The demo statements are
+ * public, so the fetch is a plain GET and the panel button links to the same
+ * user on www.fxblue.com.
  *
  * This module is imported by BOTH the /fx-blue-links page (at request time) and
  * scripts/fetch-fxblue.mts (to refresh the committed fallback), so the scraping
  * rules live in exactly one place.
  *
  * Keep this file free of Next.js and React imports — it has to run under plain
- * Node too. The viewer PIN is FXBLUE_PIN, read per call from the environment.
- * It must never be rendered, and it must not be committed.
+ * Node too.
  */
 
 export type FxBlueSource = {
@@ -24,46 +23,24 @@ export type FxBlueSource = {
    */
   fxBlueId?: string;
   publicUrl?: string;
-  /**
-   * Env var holding this statement's viewer PIN when it is not FXBLUE_PIN.
-   * VuCuBit statements can use a different PIN from the ClaudeTradeHQ one.
-   */
-  pinEnv?: string;
 };
 
-/**
- * Viewer PIN for one statement. A panel with `pinEnv` reads that variable.
- * Everything else reads FXBLUE_PIN. Read per call so the value comes from the
- * running server, not from whatever was present when the module loaded.
- */
-function fxBluePin(account: { pinEnv?: string }): string | undefined {
-  if (account.pinEnv) return process.env[account.pinEnv]?.trim() || undefined;
-  return process.env.FXBLUE_PIN?.trim() || undefined;
-}
-
-/** Accounts published on /fx-blue-links. Add new ones here. */
+/** Accounts published on /fx-blue-links, in the same order as vucubit.com/demo-accounts. */
 export const FXBLUE_ACCOUNTS = [
   {
-    id: "ClaudeTradeHQ",
-    label: "ClaudeTradeHQ",
-    fxBlueId: "VuCuBit_25K",
-    publicUrl: "https://www.fxblue.com/users/VuCuBit_25K",
-    pinEnv: "FXBLUE_PIN_25K",
+    id: "VuCuBit_40K_MT5Demo1",
+    label: "40K Start MT5 Demo",
+    publicUrl: "https://www.fxblue.com/users/VuCuBit_40K_MT5Demo1",
   },
   {
-    id: "ClaudeTradeHQ_081926",
-    label: "ClaudeTradeHQ_081926",
-    // FX Blue has no user called ClaudeTradeHQ_081926. The statement this
-    // panel links to is published as VuCuBit_Demo_.
-    fxBlueId: "VuCuBit_Demo_",
-    publicUrl: "https://www.fxblue.com/users/VuCuBit_Demo_",
+    id: "VuCuBit_25K_MT5Demo1",
+    label: "25K Start MT5 Demo",
+    publicUrl: "https://www.fxblue.com/users/VuCuBit_25K_MT5Demo1",
   },
   {
-    id: "ClaudeTradeHQthe5ers",
-    label: "ClaudeTradeHQ - The5ers 10K Challenge",
-    fxBlueId: "vucubit_The5ers",
-    publicUrl: "https://www.fxblue.com/users/vucubit_The5ers",
-    pinEnv: "FXBLUE_PIN_THE5ERS",
+    id: "VuCuBit_10K_The5ers1",
+    label: "10K Start MT5 Demo",
+    publicUrl: "https://www.fxblue.com/users/VuCuBit_10K_The5ers1",
   },
 ] as const satisfies readonly FxBlueSource[];
 
@@ -177,71 +154,21 @@ export function mapStatement(
 
 const FXBLUE_ORIGIN = "https://api.fxblue.com";
 
-function escapeRegExp(value: string) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function cookieFrom(response: Response, id: string): string | null {
-  const withGetSetCookie = response.headers as Headers & { getSetCookie?: () => string[] };
-  const parts =
-    typeof withGetSetCookie.getSetCookie === "function" ? withGetSetCookie.getSetCookie() : [];
-  const raw = parts.length > 0 ? parts.join("\n") : (response.headers.get("set-cookie") ?? "");
-  // FX Blue lowercases some user ids in the cookie name. Send the name
-  // exactly as Set-Cookie wrote it.
-  const match = raw.match(new RegExp(`(MTIPin_${escapeRegExp(id)})=([^;\\s]+)`, "i"));
-  return match ? `${match[1]}=${match[2]}` : null;
-}
-
-async function unlockStatement(id: string, pin: string): Promise<string | null> {
-  const response = await fetch(`${FXBLUE_ORIGIN}/_NeedPin.aspx`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": "Mozilla/5.0 (ClaudeTradeHQ site)",
-      Referer: `${FXBLUE_ORIGIN}/users/${id}`,
-    },
-    body: new URLSearchParams({ userid: id, pin }).toString(),
-    cache: "no-store",
-  });
-  if (!response.ok) return null;
-  const text = await response.text();
-  if (!text.includes("OKAY")) return null;
-  return cookieFrom(response, id);
-}
-
 /**
- * Fetch and parse one account. Returns null on any network, HTTP, PIN, or
+ * Fetch and parse one public statement. Returns null on any network, HTTP, or
  * parse failure so callers can fall back rather than render a half-empty card.
+ * A "Need PIN code" page is a failure: these statements are public.
  *
- * Callers cache the parsed result. The PIN post and the statement GET stay
- * uncached so a fresh cookie is not stored under a shared fetch entry.
+ * Callers cache the parsed result. The statement GET stays uncached here.
  */
 export async function fetchFxBlueAccount(
   account: FxBlueSource,
 ): Promise<FxBlueAccount | null> {
   try {
-    const pinName = account.pinEnv ?? "FXBLUE_PIN";
-    const pin = fxBluePin(account);
-    if (!pin) {
-      console.error(
-        `FX Blue: ${pinName} is not set — serving the cached snapshot for ${account.id}.`,
-      );
-      return null;
-    }
-
     const userId = account.fxBlueId ?? account.id;
-    const cookie = await unlockStatement(userId, pin);
-    if (!cookie) {
-      console.error(
-        `FX Blue: ${userId} rejected ${pinName} — serving the cached snapshot for ${account.id}.`,
-      );
-      return null;
-    }
-
     const res = await fetch(`${FXBLUE_ORIGIN}/users/${userId}`, {
       headers: {
         "User-Agent": "Mozilla/5.0 (ClaudeTradeHQ site)",
-        Cookie: cookie,
       },
       cache: "no-store",
     });

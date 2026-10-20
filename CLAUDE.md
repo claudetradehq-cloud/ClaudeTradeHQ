@@ -33,10 +33,7 @@ When working in this project, always start your prompt with:
 
 **Add an FX Blue account (`/fx-blue-links`):**
 - Add it to `FXBLUE_ACCOUNTS` in `lib/fxblue-parse.ts` — that's the only edit needed
-- Viewer PINs stay in the environment. `FXBLUE_PIN` opens `VuCuBit_Demo_`.
-  `FXBLUE_PIN_25K` opens `VuCuBit_25K`. `FXBLUE_PIN_THE5ERS` opens
-  `vucubit_The5ers`. Never render a PIN, never put one in JSX, and never commit
-  one. These can differ from each other
+- The current three statements are public. The parser does not read a viewer PIN
 - If FX Blue publishes the statement under a different user id, set `fxBlueId`
   and keep `id` as the panel id so the label and the fallback snapshot still match
 - Run `npm run fxblue` so the offline fallback covers the new account too
@@ -52,19 +49,14 @@ When working in this project, always start your prompt with:
 - `lib/fxblue-parse.ts` holds the scraping rules and is shared by the page and
   the refresh script — fix a markup change in one place only
 - `www.fxblue.com` is client-rendered and returns nothing to `fetch`.
-  `api.fxblue.com/users/<id>` is server-rendered and PIN-gated. The parser
-  POSTs that panel's PIN to `api.fxblue.com/_NeedPin.aspx`, then GETs the
-  statement with the `MTIPin` cookie. PINs live in the environment only —
-  `.env.local` locally (loaded by `npm run fxblue`), Vercel env vars in
-  production. Never `NEXT_PUBLIC_*`, never in the repo, never in HTML
-- A PIN-less request gets HTTP 200 with a "Need PIN code" page, not a 4xx. If
-  a card reads "cached — FX Blue unreachable", check that panel's PIN env var.
-  The server log says whether it is unset or rejected
-- The three panels keep their ClaudeTradeHQ labels and read the same FX Blue
-  users as https://www.vucubit.com/demo-accounts. `ClaudeTradeHQ` is
-  `VuCuBit_25K`. `ClaudeTradeHQ_081926` is `VuCuBit_Demo_` because FX Blue has
-  no user by the old id. `ClaudeTradeHQ - The5ers 10K Challenge` is
-  `vucubit_The5ers`. Each public link is that user's statement
+  `api.fxblue.com/users/<id>` is server-rendered. These statements are public,
+  so the parser GETs them directly. A "Need PIN code" page is treated as a
+  failed fetch and the card falls back to the snapshot
+- The three panels use the same names and the same public FX Blue users as
+  https://www.vucubit.com/demo-accounts, in this order: `40K Start MT5 Demo`
+  is `VuCuBit_40K_MT5Demo1`, `25K Start MT5 Demo` is `VuCuBit_25K_MT5Demo1`,
+  and `10K Start MT5 Demo` is `VuCuBit_10K_The5ers1`. Each panel button is
+  that user's statement on www.fxblue.com
 - `lib/fxblue-data.json` is the fallback if FX Blue is unreachable. Cards served
   from it are labelled "cached — FX Blue unreachable" rather than passing stale
   numbers off as current
@@ -87,8 +79,7 @@ When working in this project, always start your prompt with:
 - All images go in `/public` folder
 - Keep strong disclaimers ("Not financial advice")
 - Never hand-edit numbers in `lib/fxblue-data.json` — it is generated output.
-  Regenerate with `npm run fxblue` (needs `FXBLUE_PIN`, `FXBLUE_PIN_25K`, and
-  `FXBLUE_PIN_THE5ERS` in `.env.local`).
+  Regenerate with `npm run fxblue`.
 - Every detailed backtest report page under `app/backtests/<slug>/page.tsx` must render `<WhitelistedBuildPanel />` (from `components/whitelisted-build-panel.tsx`) between the trade-stats grid and the disclaimer block. It is the funnel from a convinced viewer into the funded/live whitelisted-EA email path. The archive page at `/backtests` and the `/downloads` page render it too. Pattern set by `app/backtests/claudetradehq-0-01/page.tsx`.
 - **No public EA file downloads.** `/downloads` is the "have Dan build your
   custom EA" service page — never re-add a `.ex4`/`.ex5` link or a
